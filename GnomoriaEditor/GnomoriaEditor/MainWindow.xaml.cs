@@ -510,16 +510,16 @@ namespace GnomoriaEditor
                .Select(x => x.Value)
                .Cast<Character>()
                            .ToList();
-            var xx=gn.SelectMany(x => x.Body.BodySections).Where(x => x.Status != BodySectionStatus.Good).ToList();
+            var xx = gn.SelectMany(x => x.Body.BodySections).Where(x => x.Status != BodySectionStatus.Good).ToList();
             gn.ForEach(character =>
                {
                    character.HealDestroyedBodySection();
-                character.Body.BodySections.ForEach(bs =>
-                {
-                    treat_limb(bs);
-                });
+                   character.Body.BodySections.ForEach(bs =>
+                   {
+                       treat_limb(bs);
+                   });
                    character.HealWound(new Item(new Vector3(0, 0, 0), ItemID.Bandage.ToString(), Material.Wool.ToString()));
-                character.DrinkItem(new Item(new Vector3(0, 0, 0), ItemID.Wine.ToString(), Material.Grape.ToString()));
+                   character.DrinkItem(new Item(new Vector3(0, 0, 0), ItemID.Wine.ToString(), Material.Grape.ToString()));
                });
         }
 
@@ -672,6 +672,19 @@ namespace GnomoriaEditor
                 ((GnomeRow)GnomeGrid.SelectedItem).Profession = e.AddedItems[0] as Profession;
         }
 
+        private void DeconstructButton_Click(object sender, RoutedEventArgs e)
+        {
+            var aaa = GnomanEmpire.Instance.EntityManager.Entities.Values.OfType<Game.Item>().Where(x => x.ItemID == "Bed").ToList();
+            var bbb = aaa.Where(ax => ax.History.Components.Count(x => x.Quality < ItemQuality.Fine && x.ItemID == "Mattress") > 0).ToList();
+            bbb.ForEach(x => GnomanEmpire.Instance.Fortress.JobBoard.AddJob(new DeconstructJob(x.Position)));
+            var l = GnomanEmpire.Instance.EntityManager.Entities.Where(x => x.Value.TypeID() == (int)GameEntityType.Door).Select(x => x.Value).Cast<Construction>().Where(d => d.Quality <= ItemQuality.Fine).ToList();
+            l.ForEach(x => GnomanEmpire.Instance.Fortress.JobBoard.AddJob(new DeconstructJob(x.Position)));
+            var l2 = GnomanEmpire.Instance.EntityManager.Entities.Where(x => x.Value.TypeID() == (int)GameEntityType.Construction).Select(x => x.Value).Cast<Construction>().Where(d => d.Quality <= ItemQuality.Fine && (d.ConstructionID == "Statue" || d.ConstructionID == "Pillar" || d.ConstructionID == "Dresser" || d.ConstructionID == "Cabinet")).ToList();
+            l2.ForEach(x => GnomanEmpire.Instance.Fortress.JobBoard.AddJob(new DeconstructJob(x.Position)));
+            var l3 = GnomanEmpire.Instance.Fortress.JobBoard.Jobs.OfType<BuildConstructionJob>().Where(j => j.Data is BuildConstructionJobData && ((BuildConstructionJobData)j.Data).ConstructionID == "Bed" || ((BuildConstructionJobData)j.Data).ConstructionID == "Statue" || ((BuildConstructionJobData)j.Data).ConstructionID == "Pillar" || ((BuildConstructionJobData)j.Data).ConstructionID == "Dresser" || ((BuildConstructionJobData)j.Data).ConstructionID == "Cabinet").ToList();
+            l3.ForEach(j => GnomanEmpire.Instance.Fortress.JobBoard.RemoveJob(j));
+        }
+
         /// <summary>
         /// Chatmetaleux's method to fix the ghost items (experimental)
         /// </summary>
@@ -758,23 +771,23 @@ namespace GnomoriaEditor
     }
 
 
-        public static class Command
-        {
-            public static readonly RoutedUICommand ShowWorld = new RoutedUICommand("World", "ShowWorld", typeof(MainWindow));
-            public static readonly RoutedUICommand ShowGnomes = new RoutedUICommand("Gnomes", "ShowGnomes", typeof(MainWindow));
-            public static readonly RoutedUICommand ShowEnemies = new RoutedUICommand("Enemies", "ShowEnemies", typeof(MainWindow));
+    public static class Command
+    {
+        public static readonly RoutedUICommand ShowWorld = new RoutedUICommand("World", "ShowWorld", typeof(MainWindow));
+        public static readonly RoutedUICommand ShowGnomes = new RoutedUICommand("Gnomes", "ShowGnomes", typeof(MainWindow));
+        public static readonly RoutedUICommand ShowEnemies = new RoutedUICommand("Enemies", "ShowEnemies", typeof(MainWindow));
 
-            public static readonly RoutedUICommand SetAttributes = new RoutedUICommand("Set attributes", "SetAttributes", typeof(MainWindow));
-            public static readonly RoutedUICommand SetSkills = new RoutedUICommand("Set skills", "SetSkills", typeof(MainWindow));
-            public static readonly RoutedUICommand SpawnGnome = new RoutedUICommand("Spawn gnome", "SpawnGnome", typeof(MainWindow));
-            public static readonly RoutedUICommand HealGnomes = new RoutedUICommand("Heal gnomes", "HealGnomes", typeof(MainWindow));
+        public static readonly RoutedUICommand SetAttributes = new RoutedUICommand("Set attributes", "SetAttributes", typeof(MainWindow));
+        public static readonly RoutedUICommand SetSkills = new RoutedUICommand("Set skills", "SetSkills", typeof(MainWindow));
+        public static readonly RoutedUICommand SpawnGnome = new RoutedUICommand("Spawn gnome", "SpawnGnome", typeof(MainWindow));
+        public static readonly RoutedUICommand HealGnomes = new RoutedUICommand("Heal gnomes", "HealGnomes", typeof(MainWindow));
 
-            public static readonly RoutedUICommand SetEnemyAttributes = new RoutedUICommand("Set enemy attributes", "SetEnemyAttributes", typeof(MainWindow));
-            public static readonly RoutedUICommand SetEnemySkills = new RoutedUICommand("Set enemy skills", "SetEnemySkills", typeof(MainWindow));
-            public static readonly RoutedUICommand EnemyDropItems = new RoutedUICommand("Drop items", "EnemyDropItems", typeof(MainWindow));
-        }
+        public static readonly RoutedUICommand SetEnemyAttributes = new RoutedUICommand("Set enemy attributes", "SetEnemyAttributes", typeof(MainWindow));
+        public static readonly RoutedUICommand SetEnemySkills = new RoutedUICommand("Set enemy skills", "SetEnemySkills", typeof(MainWindow));
+        public static readonly RoutedUICommand EnemyDropItems = new RoutedUICommand("Drop items", "EnemyDropItems", typeof(MainWindow));
+    }
 
 
-    
+
 }
 
