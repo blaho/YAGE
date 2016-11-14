@@ -505,16 +505,43 @@ namespace GnomoriaEditor
         {
             var gnomeIds = SelectedGnomeRows.Select(x => x.Id).ToList();
 
-            GnomanEmpire.Instance.EntityManager.Entities
+            var gn = GnomanEmpire.Instance.EntityManager.Entities
                .Where(x => x.Value.TypeID() == (int)GameEntityType.Character && gnomeIds.Contains(x.Value.ID))
                .Select(x => x.Value)
                .Cast<Character>()
-               .ToList()
-               .ForEach(character =>
+                           .ToList();
+            var xx=gn.SelectMany(x => x.Body.BodySections).Where(x => x.Status != BodySectionStatus.Good).ToList();
+            gn.ForEach(character =>
                {
                    character.HealDestroyedBodySection();
+                character.Body.BodySections.ForEach(bs =>
+                {
+                    treat_limb(bs);
+                });
                    character.HealWound(new Item(new Vector3(0, 0, 0), ItemID.Bandage.ToString(), Material.Wool.ToString()));
+                character.DrinkItem(new Item(new Vector3(0, 0, 0), ItemID.Wine.ToString(), Material.Grape.ToString()));
                });
+        }
+
+        private void treat_limb(BodySection section)
+        {
+            System.Reflection.FieldInfo bodyPartProperty = typeof(BodyPart)
+           .GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+           .Where(field => (field.FieldType == typeof(Game.BodyPartStatus)))
+           .Single();
+            System.Reflection.FieldInfo bodySectionProperty = typeof(BodySection)
+               .GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+               .Where(field => (field.FieldType == typeof(Game.BodySectionStatus)))
+               .Single();
+
+            if (section.Status == Game.BodySectionStatus.Missing)
+            {
+                bodySectionProperty.SetValue(section, Game.BodySectionStatus.Destroyed);
+                bodyPartProperty.SetValue(section.BodyPart, Game.BodyPartStatus.Disabled);
+            }
+            section.RepairDestroyedBodySection();
+            bodySectionProperty.SetValue(section, Game.BodySectionStatus.Good);
+            bodyPartProperty.SetValue(section.BodyPart, Game.BodyPartStatus.Good);
         }
 
         private void AboutButton_Click(object sender, RoutedEventArgs e)
