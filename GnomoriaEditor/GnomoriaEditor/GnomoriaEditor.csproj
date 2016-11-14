@@ -37,22 +37,22 @@
   <ItemGroup>
     <Reference Include="Gnomoria, Version=0.9.8.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Gnomoria.exe</HintPath>
+      <HintPath>..\..\..\..\Para\steamapps\common\Gnomoria\Gnomoria.exe</HintPath>
     </Reference>
     <Reference Include="gnomorialib, Version=0.9.8.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\gnomorialib.dll</HintPath>
+      <HintPath>..\..\..\..\Para\steamapps\common\Gnomoria\gnomorialib.dll</HintPath>
     </Reference>
     <Reference Include="irrKlang.NET4, Version=1.0.4534.25937, Culture=neutral, PublicKeyToken=a854741bd80517c7, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\irrKlang.NET4.dll</HintPath>
+      <HintPath>..\..\..\..\Para\steamapps\common\Gnomoria\irrKlang.NET4.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="SevenZipSharp, Version=0.64.4510.27485, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SevenZipSharp.dll</HintPath>
+      <HintPath>..\..\..\..\Para\steamapps\common\Gnomoria\SevenZipSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
