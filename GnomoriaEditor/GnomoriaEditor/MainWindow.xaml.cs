@@ -685,6 +685,172 @@ namespace GnomoriaEditor
             l3.ForEach(j => GnomanEmpire.Instance.Fortress.JobBoard.RemoveJob(j));
         }
 
+        private void MineshaftButton_Click(object sender, RoutedEventArgs e)
+        {
+            //GnomanEmpire.Instance.Fortress.JobBoard.Jobs.OfType<Game.MineRampUp>().ToList().ForEach(j => GnomanEmpire.Instance.Fortress.JobBoard.RemoveJob(j));
+            var gl = GnomanEmpire.Instance.EntityManager.Entities
+                                       .Where(et => et.Value.TypeID() == (int)GameEntityType.Character)
+                                       .Select(et => et.Value)
+                                       .Cast<Character>().Where(ch => ch.Behavior is Game.Behaviors.PlayerCharacterBehavior).ToList();
+            var deepest = gl.Select(pos => pos.Position.Y).Max();
+            for (var z = GnomanEmpire.Instance.Map.SurfaceLevel + 3; z <= GnomanEmpire.Instance.Map.SurfaceLevel + 50/*deepest*/; z++)
+            {
+                for (var y = 3; y < 93; y++)
+                {
+                    MineAt(2, y, z, true);
+                    MineAt(93, y, z, false);
+                }
+                for (var y = 3; y < 45; y++)
+                {
+                    MineAt(8, y, z, true);
+                    MineAt(87, y, z, false);
+                }
+                for (var y = 51; y < 93; y++)
+                {
+                    MineAt(8, y, z, true);
+                    MineAt(87, y, z, false);
+                }
+                for (var y = 8; y < 45; y++)
+                {
+                    MineAt(14, y, z, true);
+                    MineAt(81, y, z, false);
+                }
+                for (var y = 51; y < 88; y++)
+                {
+                    MineAt(14, y, z, true);
+                    MineAt(81, y, z, false);
+                }
+                for (var y = 8; y < 45; y++)
+                {
+                    MineAt(20, y, z, true);
+                    MineAt(75, y, z, false);
+                }
+                for (var y = 51; y < 88; y++)
+                {
+                    MineAt(20, y, z, true);
+                    MineAt(75, y, z, false);
+                }
+                for (var y = 14; y < 45; y++)
+                {
+                    MineAt(26, y, z, true);
+                    MineAt(69, y, z, false);
+                }
+                for (var y = 51; y < 82; y++)
+                {
+                    MineAt(26, y, z, true);
+                    MineAt(69, y, z, false);
+                }
+                for (var y = 14; y < 45; y++)
+                {
+                    MineAt(32, y, z, true);
+                    MineAt(63, y, z, false);
+                }
+                for (var y = 51; y < 82; y++)
+                {
+                    MineAt(32, y, z, true);
+                    MineAt(63, y, z, false);
+                }
+                for (var y = 20; y < 45; y++)
+                {
+                    MineAt(38, y, z, true);
+                    MineAt(57, y, z, false);
+                }
+                for (var y = 51; y < 76; y++)
+                {
+                    MineAt(38, y, z, true);
+                    MineAt(57, y, z, false);
+                }
+                for (var y = 3; y < 23; y++)
+                {
+                    MineAt(45, y, z, true);
+                    MineAt(50, y, z, false);
+                }
+                for (var y = 73; y < 93; y++)
+                {
+                    MineAt(45, y, z, true);
+                    MineAt(50, y, z, false);
+                }
+                //
+                for (var x = 2; x < 94; x++)
+                {
+                    MineAt(x, 2, z, true);
+                    MineAt(x, 93, z, false);
+                }
+                for (var x = 14; x < 45; x++)
+                {
+                    MineAt(x, 7, z, true);
+                    MineAt(x, 88, z, false);
+                }
+                for (var x = 51; x < 82; x++)
+                {
+                    MineAt(x, 7, z, true);
+                    MineAt(x, 88, z, false);
+                }
+                for (var x = 26; x < 45; x++)
+                {
+                    MineAt(x, 13, z, true);
+                    MineAt(x, 82, z, false);
+                }
+                for (var x = 51; x < 70; x++)
+                {
+                    MineAt(x, 13, z, true);
+                    MineAt(x, 82, z, false);
+                }
+                for (var x = 38; x < 45; x++)
+                {
+                    MineAt(x, 19, z, true);
+                    MineAt(x, 76, z, false);
+                }
+                for (var x = 51; x < 58; x++)
+                {
+                    MineAt(x, 19, z, true);
+                    MineAt(x, 76, z, false);
+                }
+                for (var x = 3; x < 46; x++)
+                {
+                    MineAt(x, 45, z, true);
+                    MineAt(x, 50, z, false);
+                }
+                for (var x = 50; x < 93; x++)
+                {
+                    MineAt(x, 45, z, true);
+                    MineAt(x, 50, z, false);
+                }
+            }
+            for (var z = 0; z <= GnomanEmpire.Instance.Map.SurfaceLevel + 50/*deepest*/; z++)
+            {
+                for (var y = 0; y < 96; y++)
+                    for (var x = 0; x < 96; x++)
+                    {
+                        if (!GnomanEmpire.Instance.Map.Levels[z][y][x].IsVisible)
+                            continue;
+                        var mineral = GnomanEmpire.Instance.Map.Levels[z][y][x].EmbeddedWall as Game.Mineral;
+                        if (mineral != null)
+                            GnomanEmpire.Instance.Fortress.JobBoard.AddJob(new MineJob(new Vector3(x, y, z)));
+                    }
+            }
+            GnomanEmpire.Instance.Fortress.JobBoard.Jobs.OfType<Game.ClearTileJob>().Where(j => j.Position.Z == GnomanEmpire.Instance.Map.SurfaceLevel).ToList().ForEach(j => GnomanEmpire.Instance.Fortress.JobBoard.RemoveJob(j));
+        }
+
+        string lastPrimaryFloorMaterialID;
+        string lastSecondaryFloorMaterialID;
+        private void MineAt(int x, int y, int z, bool primary)
+        {
+            var cell = GnomanEmpire.Instance.Map.Levels[z][y][x];
+            var bfj = GnomanEmpire.Instance.Fortress.JobBoard.Jobs.OfType<Game.BuildFloorJob>().ToList();
+            if (cell.Wall > 0)
+                GnomanEmpire.Instance.Fortress.JobBoard.AddJob(new MineJob(new Vector3(x, y, z)));
+            if (cell.Ramp != null && cell.Ramp.Position == new Vector3(x, y, z))
+                GnomanEmpire.Instance.Fortress.JobBoard.AddJob(new FlattenJob(new Vector3(x, y, z)));
+            if (cell.Floor == 0)
+                GnomanEmpire.Instance.Fortress.JobBoard.AddJob(new BuildFloorJob(new Vector3(x, y, z), new BuildConstructionJobData("RawStoneFloor")) { RequiredComponents = new List<JobComponent>(new JobComponent[] { new JobComponent("RawStone", primary ? lastPrimaryFloorMaterialID : lastSecondaryFloorMaterialID) }) });
+            else
+                if (primary)
+                lastPrimaryFloorMaterialID = cell.GetFloorMaterialID();
+            else
+                lastSecondaryFloorMaterialID = cell.GetFloorMaterialID();
+        }
+
         /// <summary>
         /// Chatmetaleux's method to fix the ghost items (experimental)
         /// </summary>
